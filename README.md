@@ -208,6 +208,8 @@ Automated tests replace external providers and do not call Gemini or Discord.
 
 ## 11. Run with Docker Compose
 
+Docker containers do not automatically receive credentials stored in .NET User Secrets. Provide the same values to Compose through the ignored local `.env` file.
+
 Copy the environment template and replace its placeholder values locally:
 
 ```bash
