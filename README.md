@@ -236,3 +236,9 @@ docker compose down
 ```
 
 `.env` is ignored by Git. Only `.env.example`, containing placeholders, is tracked. The multi-stage Dockerfile publishes the application in Release mode and runs it as the non-root .NET container user.
+
+## 12. Design Summary
+
+The design intentionally favors the smallest architecture that satisfies the ticket. Layered projects keep the domain, use case, HTTP API, and external providers separate, while dependency injection keeps those boundaries testable. A bounded in-memory Channel was selected because the assignment needs asynchronous processing and backpressure, but does not require durable delivery or distributed consumers. The single worker keeps ordering, failure handling, and the outbound rate limit easy to reason about.
+
+For a production system, the architecture should evolve only when the requirements demand it. Durable delivery would justify replacing the Channel with a broker; higher throughput would justify configurable bounded concurrency; multiple service instances would require a distributed rate limiter. Delivery tracking, controlled retries, dead-letter handling, metrics, and tracing would then be added around those operational requirements rather than introduced speculatively.
